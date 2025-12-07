@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Gallery | Pethum Kashmira</title>
+    <title>Work Gallery | Pethum Kashmira</title>
     
     <!-- FAVICON -->
     <link rel="icon" type="image/png" href="https://media.licdn.com/dms/image/v2/D4E03AQFdRsgOourY5A/profile-displayphoto-scale_200_200/B4EZqEAUJCJ0Ac-/0/1763151268578?e=1766620800&v=beta&t=YOS3Rs0HxNnuPx3hTa2zkHuHYl7Cf6iLS6WxFU-JD7s">
@@ -16,8 +16,15 @@
 
     <style>
         body { font-family: 'Inter', sans-serif; }
-        .gallery-card:hover { transform: translateY(-5px); }
-        .gallery-card:hover img { transform: scale(1.05); }
+        .gallery-item { transition: all 0.4s ease-in-out; }
+        .gallery-item:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        
+        /* Filter Button Active State */
+        .filter-btn.active {
+            background-color: #059669;
+            color: white;
+            border-color: #059669;
+        }
     </style>
 </head>
 <body class="bg-stone-50 text-stone-800 flex flex-col min-h-screen">
@@ -35,109 +42,168 @@
                 <!-- Back Button -->
                 <a href="index.html" class="px-4 py-2 bg-stone-200 hover:bg-stone-300 rounded-full text-sm font-bold transition-colors flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
-                    Home
+                    Back Home
                 </a>
             </div>
         </div>
     </nav>
 
-    <!-- HEADER SECTION -->
-    <header class="bg-stone-900 text-white py-16">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <h1 class="text-4xl md:text-5xl font-extrabold mb-4">Project Gallery 📸</h1>
-            <p class="text-stone-400 max-w-2xl mx-auto text-lg">
-                A collection of my work in Agri-Business, Finance, and Web3 Design. 
-                Tracking my journey from concept to completion.
-            </p>
-        </div>
+    <!-- HEADER -->
+    <header class="bg-stone-900 text-white py-12 md:py-16 text-center px-4">
+        <h1 class="text-3xl md:text-5xl font-extrabold mb-4">My Portfolio Gallery 📂</h1>
+        <p class="text-stone-400 max-w-2xl mx-auto">
+            A showcase of my academic journey, freelance projects, and collaborative works.
+        </p>
     </header>
 
-    <!-- GALLERY GRID -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-12 flex-grow w-full">
+    <!-- MAIN GALLERY SECTION -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-10 flex-grow w-full">
         
-        <!-- Filter Tabs (Optional - for looks) -->
-        <div class="flex justify-center gap-2 mb-10 flex-wrap">
-            <span class="px-4 py-1 bg-emerald-600 text-white rounded-full text-sm font-bold cursor-default">All Projects</span>
-            <span class="px-4 py-1 bg-white border border-stone-200 text-stone-500 rounded-full text-sm font-semibold">Web3</span>
-            <span class="px-4 py-1 bg-white border border-stone-200 text-stone-500 rounded-full text-sm font-semibold">Agriculture</span>
-            <span class="px-4 py-1 bg-white border border-stone-200 text-stone-500 rounded-full text-sm font-semibold">Design</span>
+        <!-- 1. FILTER BUTTONS -->
+        <div class="flex flex-wrap justify-center gap-3 mb-12">
+            <button onclick="filterGallery('all')" class="filter-btn active px-5 py-2 rounded-full border border-stone-300 font-semibold text-sm transition-all hover:bg-emerald-50">All Works</button>
+            <button onclick="filterGallery('events')" class="filter-btn px-5 py-2 rounded-full border border-stone-300 font-semibold text-sm transition-all hover:bg-emerald-50">🌟 Events</button>
+            <button onclick="filterGallery('fiverr')" class="filter-btn px-5 py-2 rounded-full border border-stone-300 font-semibold text-sm transition-all hover:bg-emerald-50">💼 Fiverr Works</button>
+            <button onclick="filterGallery('group')" class="filter-btn px-5 py-2 rounded-full border border-stone-300 font-semibold text-sm transition-all hover:bg-emerald-50">🤝 Group Projects</button>
+            <button onclick="filterGallery('academic')" class="filter-btn px-5 py-2 rounded-full border border-stone-300 font-semibold text-sm transition-all hover:bg-emerald-50">🎓 Academic</button>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- 2. GALLERY GRID -->
+        <div id="gallery-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-            <!-- PROJECT 1: Ongoing (In Progress) -->
-            <div class="gallery-card bg-white rounded-xl overflow-hidden shadow-sm border border-stone-200 transition-all duration-300 group">
-                <div class="h-56 overflow-hidden relative">
-                    <!-- Image -->
-                    <img src="https://images.unsplash.com/photo-1629752187687-3d3c7ea3a21b?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover transition-transform duration-500">
-                    <!-- Status Badge -->
-                    <div class="absolute top-4 right-4 bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-xs font-bold shadow-sm border border-amber-200 flex items-center gap-1">
-                        <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span> In Progress
+            <!-- === FEATURED ITEM: NAKSHATRA (NEW) === -->
+            <!-- Note: Replace the image src below with your actual LinkedIn post image URL if you have it hosted publicly -->
+            <div class="gallery-item bg-stone-900 rounded-xl overflow-hidden border border-emerald-500 shadow-2xl relative md:col-span-2" data-category="events">
+                <div class="h-64 md:h-full overflow-hidden relative group">
+                     <!-- Placeholder for Event Image -->
+                    <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=1600&auto=format&fit=crop" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700">
+                    <div class="absolute inset-0 bg-gradient-to-t from-stone-900 via-transparent to-transparent"></div>
+                    <div class="absolute top-4 left-4 bg-emerald-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg animate-pulse">
+                        🌟 FEATURED EVENT
                     </div>
                 </div>
-                <div class="p-6">
-                    <div class="text-xs text-indigo-600 font-bold mb-2 uppercase tracking-wide">Web3 Finance</div>
-                    <h3 class="text-xl font-bold text-stone-900 mb-2">Crypto Portfolio Tracker</h3>
-                    <p class="text-stone-500 text-sm mb-4">Developing a personal dashboard to track crypto assets and airdrop farming strategies using Google Sheets & APIs.</p>
-                    <div class="flex flex-wrap gap-2 text-[10px] text-stone-400 font-mono">
-                        <span class="bg-stone-100 px-2 py-1 rounded">Excel</span>
-                        <span class="bg-stone-100 px-2 py-1 rounded">API</span>
-                    </div>
+                <div class="p-6 md:p-8 absolute bottom-0 left-0 w-full">
+                    <h3 class="font-bold text-2xl md:text-3xl text-white mb-2">Nakshatra 4.0: Teamwork Experience</h3>
+                    <p class="text-stone-300 text-sm md:text-base mb-4 line-clamp-2 md:line-clamp-none">
+                        A massive collaborative effort organizing the university's premier talent show. Managed logistics, stage coordination, and led the team to deliver an unforgettable cultural extravaganza.
+                    </p>
+                    <a href="https://www.linkedin.com/posts/pethum-kashmira_nakshatra47-teamwork-eventexperience-activity-7353441802256883715-uzyf" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-white text-stone-900 rounded-lg text-sm font-bold hover:bg-emerald-400 transition-colors">
+                        View Post on LinkedIn ↗
+                    </a>
                 </div>
             </div>
 
-            <!-- PROJECT 2: Completed -->
-            <div class="gallery-card bg-white rounded-xl overflow-hidden shadow-sm border border-stone-200 transition-all duration-300 group">
-                <div class="h-56 overflow-hidden relative">
-                    <img src="https://images.unsplash.com/photo-1595835018698-c11c1d096180?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover transition-transform duration-500">
-                    <div class="absolute top-4 right-4 bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-xs font-bold shadow-sm border border-emerald-200 flex items-center gap-1">
-                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Completed
-                    </div>
+            <!-- === ITEM 1: FIVERR WORK === -->
+            <div class="gallery-item bg-white rounded-xl overflow-hidden border border-stone-200" data-category="fiverr">
+                <div class="h-48 overflow-hidden relative">
+                    <img src="https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/326859873/original/6c9103823aa50930776d54238548e6f777353842/do-creative-minimalist-logo-design.jpg" class="w-full h-full object-cover" alt="Logo Design">
+                    <div class="absolute top-3 right-3 bg-green-500 text-white text-[10px] font-bold px-2 py-1 rounded">FIVERR</div>
                 </div>
-                <div class="p-6">
-                    <div class="text-xs text-emerald-600 font-bold mb-2 uppercase tracking-wide">Agri-Business</div>
-                    <h3 class="text-xl font-bold text-stone-900 mb-2">Sustainable Farm Layout</h3>
-                    <p class="text-stone-500 text-sm mb-4">Designed a modern crop layout plan for a local tea estate focusing on yield maximization and soil conservation.</p>
-                    <div class="flex flex-wrap gap-2 text-[10px] text-stone-400 font-mono">
-                        <span class="bg-stone-100 px-2 py-1 rounded">Research</span>
-                        <span class="bg-stone-100 px-2 py-1 rounded">Planning</span>
-                    </div>
+                <div class="p-5">
+                    <h3 class="font-bold text-lg text-stone-900">Minimalist Logo Design</h3>
+                    <p class="text-sm text-stone-500 mt-1">Branding project for a startup client in USA. Delivered via Fiverr.</p>
                 </div>
             </div>
 
-            <!-- PROJECT 3: Coming Soon -->
-            <div class="gallery-card bg-white rounded-xl overflow-hidden shadow-sm border border-stone-200 transition-all duration-300 group">
-                <div class="h-56 overflow-hidden relative bg-stone-100 flex items-center justify-center">
-                    <span class="text-4xl">🚀</span>
-                    <div class="absolute top-4 right-4 bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-bold shadow-sm border border-blue-200 flex items-center gap-1">
-                        <span class="w-2 h-2 rounded-full bg-blue-500"></span> Planned
-                    </div>
+            <!-- === ITEM 2: ACADEMIC === -->
+            <div class="gallery-item bg-white rounded-xl overflow-hidden border border-stone-200" data-category="academic">
+                <div class="h-48 overflow-hidden relative bg-blue-50 flex items-center justify-center">
+                    <span class="text-6xl">🎓</span>
+                    <div class="absolute top-3 right-3 bg-blue-600 text-white text-[10px] font-bold px-2 py-1 rounded">ACADEMIC</div>
                 </div>
-                <div class="p-6">
-                    <div class="text-xs text-stone-400 font-bold mb-2 uppercase tracking-wide">Research</div>
-                    <h3 class="text-xl font-bold text-stone-900 mb-2">Agri-Tech Research Paper</h3>
-                    <p class="text-stone-500 text-sm mb-4">Upcoming research on the impact of blockchain technology in Sri Lankan agriculture supply chains.</p>
-                    <div class="flex flex-wrap gap-2 text-[10px] text-stone-400 font-mono">
-                        <span class="bg-stone-100 px-2 py-1 rounded">Writing</span>
-                    </div>
+                <div class="p-5">
+                    <h3 class="font-bold text-lg text-stone-900">Dean's List Achievement</h3>
+                    <p class="text-sm text-stone-500 mt-1">Recognized for outstanding academic performance in Year 2 at University of Ruhuna.</p>
                 </div>
             </div>
 
-            <!-- Add More Cards Here by Copying the Block Above -->
+            <!-- === ITEM 3: GROUP WORK === -->
+            <div class="gallery-item bg-white rounded-xl overflow-hidden border border-stone-200" data-category="group">
+                <div class="h-48 overflow-hidden relative">
+                    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover" alt="Group Work">
+                    <div class="absolute top-3 right-3 bg-amber-500 text-white text-[10px] font-bold px-2 py-1 rounded">GROUP WORK</div>
+                </div>
+                <div class="p-5">
+                    <h3 class="font-bold text-lg text-stone-900">Agri-Biz Research Project</h3>
+                    <p class="text-sm text-stone-500 mt-1">Collaborative field research on tea plantation efficiency. Led the data analysis team.</p>
+                </div>
+            </div>
+
+            <!-- === ITEM 4: FIVERR WORK === -->
+            <div class="gallery-item bg-white rounded-xl overflow-hidden border border-stone-200" data-category="fiverr">
+                <div class="h-48 overflow-hidden relative">
+                    <img src="https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/123456/original/sample-flyer.jpg" onerror="this.src='https://via.placeholder.com/400x300?text=Flyer+Design'" class="w-full h-full object-cover" alt="Flyer">
+                    <div class="absolute top-3 right-3 bg-green-500 text-white text-[10px] font-bold px-2 py-1 rounded">FIVERR</div>
+                </div>
+                <div class="p-5">
+                    <h3 class="font-bold text-lg text-stone-900">Corporate Flyer Design</h3>
+                    <p class="text-sm text-stone-500 mt-1">Professional flyer design created for a marketing agency.</p>
+                </div>
+            </div>
+
+             <!-- === ITEM 5: ACADEMIC === -->
+             <div class="gallery-item bg-white rounded-xl overflow-hidden border border-stone-200" data-category="academic">
+                <div class="h-48 overflow-hidden relative bg-indigo-50 flex items-center justify-center">
+                    <span class="text-6xl">📊</span>
+                    <div class="absolute top-3 right-3 bg-blue-600 text-white text-[10px] font-bold px-2 py-1 rounded">ACADEMIC</div>
+                </div>
+                <div class="p-5">
+                    <h3 class="font-bold text-lg text-stone-900">CA Business Level</h3>
+                    <p class="text-sm text-stone-500 mt-1">Completed Business Level modules with high distinction.</p>
+                </div>
+            </div>
+
+            <!-- === ITEM 6: GROUP WORK === -->
+            <div class="gallery-item bg-white rounded-xl overflow-hidden border border-stone-200" data-category="group">
+                <div class="h-48 overflow-hidden relative">
+                    <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover" alt="Presentation">
+                    <div class="absolute top-3 right-3 bg-amber-500 text-white text-[10px] font-bold px-2 py-1 rounded">GROUP WORK</div>
+                </div>
+                <div class="p-5">
+                    <h3 class="font-bold text-lg text-stone-900">Market Strategy Presentation</h3>
+                    <p class="text-sm text-stone-500 mt-1">Final year presentation on sustainable market strategies for local farmers.</p>
+                </div>
+            </div>
 
         </div>
+
     </main>
 
     <!-- FOOTER -->
     <footer class="border-t border-stone-200 pt-10 pb-6 text-center bg-white mt-auto">
-        <div class="max-w-4xl mx-auto px-4">
-            <h2 class="text-xl font-bold text-stone-900 mb-2">Pethum Kashmira</h2>
-            <p class="text-stone-500 mb-6 text-sm">Agri-Business | Finance | Web3</p>
-            <p class="text-xs text-stone-400">
-                © 2025 Pethum Kashmira. All Rights Reserved.
-            </p>
-        </div>
+        <p class="text-xs text-stone-400">© 2025 Pethum Kashmira.</p>
     </footer>
 
+    <!-- FILTER LOGIC -->
+    <script>
+        function filterGallery(category) {
+            // 1. Manage Buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active', 'bg-emerald-600', 'text-white', 'border-emerald-600');
+                btn.classList.add('border-stone-300');
+            });
+            // Highlight clicked button
+            const activeBtn = event.target;
+            activeBtn.classList.add('active');
+            activeBtn.classList.remove('border-stone-300');
+
+            // 2. Filter Items
+            const items = document.querySelectorAll('.gallery-item');
+            
+            items.forEach(item => {
+                // Special check for 'events' category items
+                // If filtering 'all', show everything. If filtering specific, show matches.
+                // Note: The 'events' item spans 2 cols, others span 1.
+                if (category === 'all' || item.dataset.category === category) {
+                    item.classList.remove('hidden');
+                    // Add animation
+                    item.classList.add('animate-fade-in');
+                    setTimeout(() => item.classList.remove('animate-fade-in'), 500);
+                } else {
+                    item.classList.add('hidden');
+                }
+            });
+        }
+    </script>
 </body>
 </html>
