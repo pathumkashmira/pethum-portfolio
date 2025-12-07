@@ -5,23 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pethum Kashmira | Multidisciplinary Portfolio</title>
     
-    <!-- FAVICON -->
     <link rel="icon" type="image/png" href="https://media.licdn.com/dms/image/v2/D4E03AQFdRsgOourY5A/profile-displayphoto-scale_200_200/B4EZqEAUJCJ0Ac-/0/1763151268578?e=1766620800&v=beta&t=YOS3Rs0HxNnuPx3hTa2zkHuHYl7Cf6iLS6WxFU-JD7s">
 
-    <!-- Tailwind CSS with Dark Mode Config -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
-            darkMode: 'class', // Enable class-based dark mode
+            darkMode: 'class', 
             theme: {
                 extend: {
                     colors: {
                         dark: {
-                            bg: '#0c0a09',      // stone-950
-                            card: '#1c1917',    // stone-900
-                            border: '#292524',  // stone-800
-                            text: '#f5f5f4',    // stone-100
-                            muted: '#a8a29e'    // stone-400
+                            bg: '#0c0a09',      
+                            card: '#1c1917',    
+                            border: '#292524',  
+                            text: '#f5f5f4',    
+                            muted: '#a8a29e'    
+                        }
+                    },
+                    animation: {
+                        'blob': 'blob 7s infinite',
+                        'float-slow': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
                         }
                     }
                 }
@@ -29,43 +43,42 @@
         }
     </script>
     
-    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
-    <!-- Google Fonts: Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
 
-    <!-- FIREBASE SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        body { font-family: 'Inter', sans-serif; overflow-x: hidden; }
         
         /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f5f5f4; }
+        ::-webkit-scrollbar-track { background: transparent; }
         .dark ::-webkit-scrollbar-track { background: #1c1917; }
         ::-webkit-scrollbar-thumb { background: #78716c; border-radius: 4px; }
         .dark ::-webkit-scrollbar-thumb { background: #44403c; }
         
+        /* Glassmorphism & Visual Upgrades */
         .glass-panel {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(231, 229, 228, 1);
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
         }
         .dark .glass-panel {
-            background: rgba(28, 25, 23, 0.95);
-            border: 1px solid rgba(41, 37, 36, 1);
+            background: rgba(28, 25, 23, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .timeline-dot { transition: all 0.3s ease; }
-        .timeline-item:hover .timeline-dot { transform: scale(1.2); background-color: #059669; }
+        .timeline-item:hover .timeline-dot { transform: scale(1.3); background-color: #059669; box-shadow: 0 0 10px rgba(16, 185, 129, 0.5); }
         
         /* Card Hover Effects */
-        .expertise-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
-        .fiverr-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.15); }
+        .expertise-card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+        .fiverr-card:hover { transform: translateY(-6px); box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.2); }
         .article-card:hover .article-title { color: #059669; }
         .article-card:hover img { transform: scale(1.05); }
 
@@ -76,15 +89,41 @@
         @keyframes pulse-green { 0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
         .btn-pulse { animation: pulse-green 2s infinite; }
 
+        /* Scroll Reveal Animation Classes */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Typing Cursor */
+        .cursor-blink { animation: blink 1s step-end infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        /* Dynamic Background Blobs */
+        .bg-blob-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; pointer-events: none;
+        }
+        .blob {
+            position: absolute; filter: blur(70px); opacity: 0.4; border-radius: 50%; animation: blob 10s infinite cubic-bezier(0.4, 0.2, 0.2, 1);
+        }
+
+        /* 3D Tilt */
+        .tilt-card { transition: transform 0.1s ease; transform-style: preserve-3d; }
+
         /* Page Transitions */
-        .page-section { animation: fadeIn 0.4s ease-out; }
+        .page-section { animation: fadeIn 0.5s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .hidden { display: none; }
         
-        .nav-btn.active { color: #059669; font-weight: 700; }
+        .nav-btn.active { color: #059669; font-weight: 700; background-color: rgba(16, 185, 129, 0.1); }
         
         /* Admin Styles */
-        .admin-modal { background-color: rgba(0, 0, 0, 0.8); }
+        .admin-modal { background-color: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px); }
         .admin-controls { position: absolute; top: 10px; right: 10px; display: flex; gap: 5px; z-index: 50; }
         .admin-btn { background: white; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); cursor: pointer; transition: transform 0.2s; border: 1px solid #e5e7eb; }
         .admin-btn:hover { transform: scale(1.1); }
@@ -97,17 +136,20 @@
 </head>
 <body class="bg-stone-50 text-stone-800 dark:bg-dark-bg dark:text-dark-text antialiased selection:bg-emerald-100 selection:text-emerald-900 flex flex-col min-h-screen transition-colors duration-300">
 
-    <!-- Navigation -->
-    <nav class="sticky top-0 z-50 bg-stone-50/95 dark:bg-dark-bg/95 border-b border-stone-200 dark:border-dark-border backdrop-blur-sm transition-colors duration-300">
+    <div class="bg-blob-container">
+        <div class="blob bg-emerald-300 w-96 h-96 top-0 left-0 mix-blend-multiply dark:mix-blend-screen dark:opacity-20 animate-blob"></div>
+        <div class="blob bg-indigo-300 w-96 h-96 top-0 right-0 mix-blend-multiply dark:mix-blend-screen dark:opacity-20 animate-blob" style="animation-delay: 2s"></div>
+        <div class="blob bg-purple-300 w-96 h-96 -bottom-32 left-20 mix-blend-multiply dark:mix-blend-screen dark:opacity-20 animate-blob" style="animation-delay: 4s"></div>
+    </div>
+
+    <nav class="sticky top-0 z-50 bg-stone-50/80 dark:bg-dark-bg/80 border-b border-stone-200 dark:border-dark-border backdrop-blur-md transition-colors duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6">
             <div class="flex justify-between items-center h-16">
-                <!-- Logo -->
                 <div id="secret-logo" class="flex items-center gap-2 font-bold text-lg tracking-tight text-stone-900 dark:text-white cursor-pointer select-none">
                     <img src="https://media.licdn.com/dms/image/v2/D4E03AQFdRsgOourY5A/profile-displayphoto-scale_200_200/B4EZqEAUJCJ0Ac-/0/1763151268578?e=1766620800&v=beta&t=YOS3Rs0HxNnuPx3hTa2zkHuHYl7Cf6iLS6WxFU-JD7s" alt="PK" class="w-8 h-8 rounded-full border border-stone-300">
                     <span>Pethum Kashmira</span>
                 </div>
 
-                <!-- Desktop Menu -->
                 <div class="hidden md:flex gap-2 text-sm font-medium text-stone-500 dark:text-stone-400 items-center">
                     <button onclick="navigateTo('profile')" class="nav-btn px-3 py-2 rounded-md hover:bg-stone-100 dark:hover:bg-stone-800 hover:text-emerald-600 transition-colors active" data-target="profile">Profile</button>
                     <button onclick="navigateTo('expertise')" class="nav-btn px-3 py-2 rounded-md hover:bg-stone-100 dark:hover:bg-stone-800 hover:text-emerald-600 transition-colors" data-target="expertise">Expertise</button>
@@ -123,20 +165,18 @@
                         </span>
                     </button>
 
-                    <button onclick="navigateTo('nft-drop')" class="ml-2 px-4 py-2 bg-stone-800 text-white rounded-full hover:bg-stone-900 transition-colors shadow-sm font-semibold border border-stone-700" data-target="nft-drop">NFT Drop 🚀</button>
+                    <button onclick="navigateTo('nft-drop')" class="ml-2 px-4 py-2 bg-stone-800 text-white rounded-full hover:bg-stone-900 transition-colors shadow-sm font-semibold border border-stone-700 hover:shadow-indigo-500/50 hover:border-indigo-500">NFT Drop 🚀</button>
 
                     <a href="gallery.html" class="ml-2 px-4 py-2 bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:text-emerald-600 rounded-md font-bold transition-colors border border-stone-200 dark:border-stone-700">Gallery 📸</a>
                     
                     <button onclick="navigateTo('contact')" class="ml-1 px-4 py-2 bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:text-emerald-600 rounded-full font-bold transition-colors border border-stone-200 dark:border-stone-700">Contact 📬</button>
 
-                    <!-- Dark Mode Toggle -->
                     <button onclick="toggleDarkMode()" class="ml-3 p-2 rounded-full bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400 hover:bg-stone-200 dark:hover:bg-stone-700 transition-colors">
                         <span id="dark-icon-sun" class="hidden">☀️</span>
                         <span id="dark-icon-moon">🌙</span>
                     </button>
                 </div>
                 
-                <!-- Mobile Menu Button -->
                 <div class="md:hidden flex items-center gap-3">
                     <button onclick="toggleDarkMode()" class="p-2 rounded-full bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400">
                         <span id="mobile-dark-icon-sun" class="hidden">☀️</span>
@@ -150,9 +190,8 @@
                 </div>
             </div>
             
-            <!-- Mobile Menu Dropdown -->
-            <div id="mobile-menu" class="hidden md:hidden pb-4">
-                <div class="flex flex-col space-y-2">
+            <div id="mobile-menu" class="hidden md:hidden pb-4 glass-panel mt-2 rounded-xl">
+                <div class="flex flex-col space-y-2 p-2">
                     <button onclick="navigateTo('profile'); toggleMobileMenu()" class="text-left px-3 py-2 text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-md">Profile</button>
                     <button onclick="navigateTo('expertise'); toggleMobileMenu()" class="text-left px-3 py-2 text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-md">Expertise</button>
                     <button onclick="navigateTo('timeline'); toggleMobileMenu()" class="text-left px-3 py-2 text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-md">Journey</button>
@@ -168,9 +207,8 @@
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 py-10 flex-grow w-full">
 
-        <!-- ADMIN LOGIN MODAL -->
         <div id="admin-login-modal" class="fixed inset-0 admin-modal hidden z-[100] flex items-center justify-center">
-            <div class="bg-white dark:bg-stone-800 rounded-xl p-8 max-w-sm w-full shadow-2xl">
+            <div class="glass-panel bg-white dark:bg-stone-800 rounded-xl p-8 max-w-sm w-full shadow-2xl">
                 <h3 class="text-2xl font-bold mb-2 text-stone-900 dark:text-white">Admin Access 🔒</h3>
                 <p class="text-xs text-stone-500 dark:text-stone-400 mb-4">Database: <span id="db-status-text" class="text-amber-500 font-bold">Connecting...</span></p>
                 <input type="password" id="admin-pass" placeholder="Enter Password" class="w-full px-4 py-2 border dark:border-stone-600 dark:bg-stone-700 dark:text-white rounded-lg mb-4 focus:ring-2 focus:ring-emerald-500 outline-none">
@@ -181,8 +219,7 @@
             </div>
         </div>
 
-        <!-- ADMIN DASHBOARD -->
-        <div id="admin-dashboard" class="hidden mb-10 bg-stone-900 text-white p-6 rounded-2xl shadow-xl border border-stone-700 sticky top-20 z-40 max-h-[80vh] overflow-y-auto">
+        <div id="admin-dashboard" class="hidden mb-10 bg-stone-900/95 backdrop-blur-md text-white p-6 rounded-2xl shadow-xl border border-stone-700 sticky top-20 z-40 max-h-[80vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-xl font-bold text-emerald-400">🔥 Dashboard</h2>
                 <div class="flex gap-2">
@@ -192,7 +229,6 @@
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Forms (Same as before) -->
                 <div class="bg-stone-800 p-4 rounded-xl border border-stone-700">
                     <h3 class="font-bold mb-3">📝 Articles</h3>
                     <input type="hidden" id="art-id">
@@ -204,7 +240,6 @@
                     <input type="text" id="new-art-link" placeholder="Link URL" class="w-full mb-4 px-3 py-2 bg-stone-700 rounded text-sm outline-none border border-stone-600">
                     <button id="art-btn" onclick="handleArticle()" class="w-full bg-emerald-600 hover:bg-emerald-500 py-2 rounded font-bold text-sm">Add</button>
                 </div>
-                <!-- Service Form -->
                 <div class="bg-stone-800 p-4 rounded-xl border border-stone-700">
                     <h3 class="font-bold mb-3">💼 Services</h3>
                     <input type="hidden" id="gig-id">
@@ -216,7 +251,6 @@
                     <input type="text" id="new-gig-link" placeholder="Link URL" class="w-full mb-4 px-3 py-2 bg-stone-700 rounded text-sm outline-none border border-stone-600">
                     <button id="gig-btn" onclick="handleService()" class="w-full bg-indigo-600 hover:bg-indigo-500 py-2 rounded font-bold text-sm">Add</button>
                 </div>
-                <!-- Journey Form -->
                 <div class="bg-stone-800 p-4 rounded-xl border border-stone-700">
                     <h3 class="font-bold mb-3">🚀 Journey</h3>
                     <input type="hidden" id="jny-id">
@@ -232,7 +266,6 @@
                 </div>
             </div>
             
-            <!-- Inbox -->
             <div class="mt-8 border-t border-stone-700 pt-6">
                 <h3 class="text-xl font-bold text-emerald-400 mb-4 flex items-center gap-2">📬 Inbox</h3>
                 <div id="admin-messages-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-60 overflow-y-auto pr-2">
@@ -241,15 +274,15 @@
             </div>
         </div>
 
-        <!-- PAGE 1: PROFILE -->
         <div id="page-profile" class="page-section">
-            <section class="grid grid-cols-1 md:grid-cols-12 gap-12 items-start pt-8">
-                <div class="md:col-span-7 space-y-6 self-center">
-                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200 text-xs font-bold uppercase tracking-wide">
-                        Open to Work & Collaboration
+            <section class="grid grid-cols-1 md:grid-cols-12 gap-12 items-start pt-8 min-h-[80vh] content-center">
+                <div class="md:col-span-7 space-y-6 self-center reveal active">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100/50 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-200 text-xs font-bold uppercase tracking-wide border border-emerald-200 dark:border-emerald-800">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Open to Work & Collaboration
                     </div>
                     <h1 class="text-4xl sm:text-5xl font-extrabold text-stone-900 dark:text-white leading-tight">
-                        Bridging <span class="text-emerald-600">Agri-Business</span>, <span class="text-stone-500 dark:text-stone-400">Finance</span> & <span class="text-indigo-600">Web3</span>.
+                        Bridging <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-emerald-400" id="typing-text">Agri-Business</span><span class="cursor-blink text-stone-400">|</span><br>
+                        <span class="text-stone-500 dark:text-stone-400">Finance</span> & <span class="text-indigo-600">Web3</span>.
                     </h1>
                     <p class="text-lg text-stone-600 dark:text-stone-300 leading-relaxed">
                         I am an undergraduate at the <strong>University of Ruhuna</strong> and a student at <strong>CA Sri Lanka</strong>. I combine traditional business acumen with modern digital innovation, exploring the intersection of Agriculture, Financial Strategy, and Blockchain Technology.
@@ -266,10 +299,10 @@
                         </a>
                     </div>
                 </div>
-                <div class="md:col-span-5 relative">
-                    <div class="glass-panel rounded-2xl shadow-lg relative z-10 overflow-hidden">
-                        <div class="h-32 w-full bg-stone-200 dark:bg-stone-700">
-                            <img src="https://media.licdn.com/dms/image/v2/D5616AQFAk5ilkB8lZw/profile-displaybackgroundimage-shrink_350_1400/B56ZgozRjVHQAY-/0/1753031221804?e=1766620800&v=beta&t=g9uBL94vYxGGxaorJ7Wu15ZaD8jQvCzAEvZGlR-e5GQ" alt="Cover" class="w-full h-full object-cover">
+                <div class="md:col-span-5 relative reveal" style="transition-delay: 200ms;">
+                    <div id="profile-card" class="glass-panel rounded-2xl shadow-2xl relative z-10 overflow-hidden tilt-card transform transition-all duration-300">
+                        <div class="h-32 w-full bg-gradient-to-r from-stone-200 to-stone-300 dark:from-stone-700 dark:to-stone-800">
+                            <img src="https://media.licdn.com/dms/image/v2/D5616AQFAk5ilkB8lZw/profile-displaybackgroundimage-shrink_350_1400/B56ZgozRjVHQAY-/0/1753031221804?e=1766620800&v=beta&t=g9uBL94vYxGGxaorJ7Wu15ZaD8jQvCzAEvZGlR-e5GQ" alt="Cover" class="w-full h-full object-cover mix-blend-overlay opacity-80">
                         </div>
                         <div class="px-6 pb-6 relative">
                             <div class="-mt-12 mb-4">
@@ -296,17 +329,15 @@
             </section>
         </div>
 
-        <!-- PAGE 2: EXPERTISE -->
         <div id="page-expertise" class="page-section hidden">
             <section>
-                <div class="text-center mb-10">
+                <div class="text-center mb-10 reveal">
                     <h2 class="text-3xl font-bold text-stone-900 dark:text-white">Multidisciplinary Focus</h2>
                     <p class="text-stone-500 dark:text-stone-400 mt-2">A visual overview of my core areas of expertise.</p>
                 </div>
     
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <!-- Cards with dark mode classes -->
-                    <div class="expertise-card bg-white dark:bg-dark-card rounded-xl overflow-hidden shadow-sm border border-stone-200 dark:border-dark-border transition-all">
+                    <div class="reveal expertise-card bg-white dark:bg-dark-card rounded-xl overflow-hidden shadow-sm border border-stone-200 dark:border-dark-border transition-all">
                         <div class="h-36 w-full bg-stone-100 overflow-hidden relative group">
                             <img src="https://www.buhave.com/guide/wp-content/uploads/2025/05/University-of-Ruhuna.webp" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
                         </div>
@@ -315,7 +346,7 @@
                             <p class="text-xs text-stone-600 dark:text-stone-400">Core academic focus at University of Ruhuna.</p>
                         </div>
                     </div>
-                    <div class="expertise-card bg-white dark:bg-dark-card rounded-xl overflow-hidden shadow-sm border border-stone-200 dark:border-dark-border transition-all">
+                    <div class="reveal expertise-card bg-white dark:bg-dark-card rounded-xl overflow-hidden shadow-sm border border-stone-200 dark:border-dark-border transition-all" style="transition-delay: 100ms">
                         <div class="h-36 w-full bg-stone-100 overflow-hidden relative group">
                             <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSp_DARSOSHJ9wYfV1NPhGks-HzpBjFoxnjsA&s" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
                         </div>
@@ -324,7 +355,7 @@
                             <p class="text-xs text-stone-600 dark:text-stone-400">Pursuing Chartered Accountancy at CA Sri Lanka.</p>
                         </div>
                     </div>
-                    <div class="expertise-card bg-white dark:bg-dark-card rounded-xl overflow-hidden shadow-sm border border-stone-200 dark:border-dark-border transition-all">
+                    <div class="reveal expertise-card bg-white dark:bg-dark-card rounded-xl overflow-hidden shadow-sm border border-stone-200 dark:border-dark-border transition-all" style="transition-delay: 200ms">
                         <div class="h-36 w-full bg-stone-100 overflow-hidden relative group">
                             <img src="https://cdn.prod.website-files.com/606a802fcaa89bc357508cad/62291b5f923ec472a68d77ea_Blog%20-%201%20(2).png" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
                         </div>
@@ -333,7 +364,7 @@
                             <p class="text-xs text-stone-600 dark:text-stone-400">Creating visual solutions for global clients.</p>
                         </div>
                     </div>
-                    <div class="expertise-card bg-white dark:bg-dark-card rounded-xl overflow-hidden shadow-sm border border-stone-200 dark:border-dark-border transition-all">
+                    <div class="reveal expertise-card bg-white dark:bg-dark-card rounded-xl overflow-hidden shadow-sm border border-stone-200 dark:border-dark-border transition-all" style="transition-delay: 300ms">
                         <div class="h-36 w-full bg-stone-100 overflow-hidden relative group">
                             <img src="https://www.menosfios.com/wp-content/uploads/2023/07/web-3.0.jpg" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
                         </div>
@@ -344,14 +375,12 @@
                     </div>
                 </div>
 
-                <!-- Skill Cloud -->
-                <div class="mt-12 bg-white dark:bg-dark-card rounded-2xl p-8 border border-stone-200 dark:border-dark-border shadow-sm text-center">
+                <div class="reveal mt-12 bg-white dark:bg-dark-card rounded-2xl p-8 border border-stone-200 dark:border-dark-border shadow-sm text-center">
                     <h3 class="text-lg font-bold text-stone-900 dark:text-white mb-6">Competency Cloud</h3>
                     <div class="flex flex-wrap gap-2 justify-center" id="skill-cloud"></div>
                 </div>
 
-                <!-- GitHub Stats Section -->
-                <div class="mt-8 bg-stone-900 rounded-2xl p-6 md:p-10 border border-stone-800 shadow-xl text-center overflow-hidden relative">
+                <div class="reveal mt-8 bg-stone-900 rounded-2xl p-6 md:p-10 border border-stone-800 shadow-xl text-center overflow-hidden relative">
                     <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
                     <h3 class="text-xl font-bold text-white mb-8 flex items-center justify-center gap-3">
                         <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
@@ -374,20 +403,17 @@
             </section>
         </div>
 
-        <!-- PAGE 3: JOURNEY -->
         <div id="page-timeline" class="page-section hidden">
             <section class="max-w-4xl mx-auto">
-                <h2 class="text-3xl font-bold text-stone-900 dark:text-white mb-8 text-center">Academic & Professional Journey</h2>
+                <h2 class="text-3xl font-bold text-stone-900 dark:text-white mb-8 text-center reveal">Academic & Professional Journey</h2>
                 <div class="relative border-l-2 border-stone-200 dark:border-stone-700 ml-3 space-y-12 pb-4" id="timeline-container">
-                    <!-- Loaded dynamically -->
-                </div>
+                    </div>
             </section>
         </div>
 
-        <!-- PAGE 4: ARTICLES -->
         <div id="page-articles" class="page-section hidden">
             <section>
-                <div class="flex justify-between items-end mb-8">
+                <div class="flex justify-between items-end mb-8 reveal">
                     <div>
                         <span class="text-emerald-600 font-bold tracking-wider text-xs uppercase mb-1 block">Thoughts & Insights</span>
                         <h2 class="text-3xl font-bold text-stone-900 dark:text-white">Latest Articles</h2>
@@ -405,10 +431,9 @@
             </section>
         </div>
 
-        <!-- PAGE 5: SERVICES -->
         <div id="page-fiverr-gigs" class="page-section hidden">
             <section class="space-y-10">
-                <div class="text-center">
+                <div class="text-center reveal">
                     <span class="text-emerald-600 font-bold tracking-wider text-xs uppercase mb-2 block">Freelance Services</span>
                     <h2 class="text-3xl font-bold text-stone-900 dark:text-white">Hire Me on Fiverr</h2>
                     <p class="text-stone-500 dark:text-stone-400 mt-2">Professional services tailored to your business needs.</p>
@@ -419,9 +444,8 @@
             </section>
         </div>
 
-        <!-- PAGE 6: NFT DROP -->
         <div id="page-nft-drop" class="page-section hidden">
-            <section class="relative overflow-hidden rounded-3xl bg-slate-900 text-white p-10 md:p-14 text-center shadow-2xl min-h-[600px] flex items-center justify-center">
+            <section class="reveal relative overflow-hidden rounded-3xl bg-slate-900 text-white p-10 md:p-14 text-center shadow-2xl min-h-[600px] flex items-center justify-center">
                 <div class="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-indigo-500/30 via-slate-900 to-slate-900"></div>
                 <div class="relative z-10 max-w-4xl mx-auto space-y-8 w-full">
                     <div>
@@ -442,11 +466,9 @@
             </section>
         </div>
 
-        <!-- PAGE 7: CONTACT -->
         <div id="page-contact" class="page-section hidden">
-            <section class="max-w-3xl mx-auto pt-10">
-                <div class="bg-white dark:bg-dark-card rounded-2xl shadow-xl border border-stone-200 dark:border-dark-border overflow-hidden flex flex-col md:flex-row">
-                    <!-- Info Side -->
+            <section class="max-w-3xl mx-auto pt-10 reveal">
+                <div class="glass-panel bg-white dark:bg-dark-card rounded-2xl shadow-xl border border-stone-200 dark:border-dark-border overflow-hidden flex flex-col md:flex-row">
                     <div class="bg-stone-900 text-white p-8 md:w-2/5 flex flex-col justify-between">
                         <div>
                             <h2 class="text-3xl font-bold mb-2">Let's Chat</h2>
@@ -457,7 +479,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Form Side -->
                     <div class="p-8 md:w-3/5 bg-stone-50 dark:bg-stone-900">
                         <form id="contact-form" onsubmit="event.preventDefault(); sendContactMessage();" class="space-y-4">
                             <div>
@@ -481,9 +502,8 @@
 
     </main>
 
-    <!-- FLOATING CHAT BUBBLE -->
     <div class="fixed bottom-6 right-6 z-[60] flex flex-col items-end">
-        <div id="chat-popup" class="hidden mb-4 w-80 bg-white dark:bg-dark-card rounded-2xl shadow-2xl border border-stone-200 dark:border-dark-border overflow-hidden transform transition-all origin-bottom-right">
+        <div id="chat-popup" class="hidden mb-4 w-80 bg-white dark:bg-dark-card rounded-2xl shadow-2xl border border-stone-200 dark:border-dark-border overflow-hidden transform transition-all origin-bottom-right glass-panel">
             <div class="bg-stone-900 p-4 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <div class="relative">
@@ -509,25 +529,17 @@
         </button>
     </div>
 
-    <!-- Footer -->
-    <footer class="border-t border-stone-200 dark:border-dark-border pt-10 pb-6 text-center mt-auto bg-white dark:bg-dark-card transition-colors duration-300">
+    <footer class="glass-panel border-t border-stone-200 dark:border-dark-border pt-10 pb-6 text-center mt-auto transition-colors duration-300">
         <div class="max-w-4xl mx-auto px-4">
             <h2 class="text-xl font-bold text-stone-900 dark:text-white mb-2">Let's Connect</h2>
             <p class="text-stone-500 dark:text-stone-400 mb-8">Feel free to reach out for collaborations or just a friendly hello!</p>
             
-            <!-- Social Icons Container -->
             <div class="flex flex-wrap justify-center gap-4 mb-8">
-                <!-- GitHub -->
                 <a href="https://github.com/pathumkashmira" target="_blank" class="group relative p-3 bg-stone-100 dark:bg-stone-800 rounded-full hover:bg-[#333] transition-colors duration-300"><svg class="w-5 h-5 text-stone-600 dark:text-stone-400 group-hover:text-white transition-colors" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg></a>
-                <!-- Facebook -->
                 <a href="https://web.facebook.com/pethumkashmira2" target="_blank" class="group relative p-3 bg-stone-100 dark:bg-stone-800 rounded-full hover:bg-[#1877F2] transition-colors duration-300"><svg class="w-5 h-5 text-stone-600 dark:text-stone-400 group-hover:text-white transition-colors" fill="currentColor" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg></a>
-                <!-- WhatsApp -->
                 <a href="https://wa.me/94769667684" target="_blank" class="group relative p-3 bg-stone-100 dark:bg-stone-800 rounded-full hover:bg-[#25D366] transition-colors duration-300"><svg class="w-5 h-5 text-stone-600 dark:text-stone-400 group-hover:text-white transition-colors" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg></a>
-                <!-- LinkedIn -->
                 <a href="https://www.linkedin.com/in/pethum-kashmira/" target="_blank" class="group relative p-3 bg-stone-100 dark:bg-stone-800 rounded-full hover:bg-[#0077b5] transition-colors duration-300"><svg class="w-5 h-5 text-stone-600 dark:text-stone-400 group-hover:text-white transition-colors" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></a>
-                <!-- Medium -->
                 <a href="https://medium.com/@kpethumkashmira" target="_blank" class="group relative p-3 bg-stone-100 dark:bg-stone-800 rounded-full hover:bg-black hover:dark:bg-white hover:dark:text-black transition-colors duration-300"><svg class="w-5 h-5 text-stone-600 dark:text-stone-400 group-hover:text-white group-hover:dark:text-black transition-colors" fill="currentColor" viewBox="0 0 24 24"><path d="M0 0v24h24v-24h-24zm11.378 12.013c0 2.502-1.916 4.532-4.281 4.532-2.364 0-4.281-2.03-4.281-4.532 0-2.503 1.917-4.534 4.281-4.534 2.365 0 4.281 2.031 4.281 4.534zm5.722 0c0 2.324-1.288 4.209-2.876 4.209-1.59 0-2.877-1.885-2.877-4.209s1.287-4.21 2.877-4.21c1.588 0 2.876 1.886 2.876 4.21zm4.187 0c0 2.149-.614 3.891-1.373 3.891-.758 0-1.372-1.742-1.372-3.891 0-2.148.614-3.89 1.372-3.89.759 0 1.373 1.742 1.373 3.89z"/></svg></a>
-                <!-- Agency -->
                 <a href="http://linkedin.com/company/the-mind-spark-media" target="_blank" class="group relative p-3 bg-stone-100 dark:bg-stone-800 rounded-full hover:bg-stone-800 hover:dark:bg-stone-200 hover:dark:text-black transition-colors duration-300"><svg class="w-5 h-5 text-stone-600 dark:text-stone-400 group-hover:text-white group-hover:dark:text-black transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg></a>
             </div>
 
@@ -537,8 +549,45 @@
         </div>
     </footer>
 
-    <!-- LOGIC SCRIPTS -->
     <script>
+        // --- TYPING EFFECT ---
+        const textToType = ["Agri-Business", "Finance", "Modern Tech"];
+        let typeIdx = 0, charIdx = 0, isDeleting = false;
+        const typeElement = document.getElementById('typing-text');
+        
+        function typeWriter() {
+            if(!typeElement) return;
+            const currentText = textToType[typeIdx];
+            if (isDeleting) {
+                typeElement.innerText = currentText.substring(0, charIdx - 1);
+                charIdx--;
+            } else {
+                typeElement.innerText = currentText.substring(0, charIdx + 1);
+                charIdx++;
+            }
+            if (!isDeleting && charIdx === currentText.length) setTimeout(() => isDeleting = true, 2000);
+            else if (isDeleting && charIdx === 0) { isDeleting = false; typeIdx = (typeIdx + 1) % textToType.length; }
+            setTimeout(typeWriter, isDeleting ? 100 : 150);
+        }
+        document.addEventListener('DOMContentLoaded', typeWriter);
+
+        // --- SCROLL REVEAL OBSERVER ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if(entry.isIntersecting) entry.target.classList.add('active'); });
+        }, { threshold: 0.1 });
+
+        // --- 3D TILT EFFECT ---
+        const card = document.getElementById('profile-card');
+        if(card) {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.transform = `perspective(1000px) rotateX(${((y - rect.height/2)/rect.height)*-10}deg) rotateY(${((x - rect.width/2)/rect.width)*10}deg) scale(1.02)`;
+            });
+            card.addEventListener('mouseleave', () => card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)');
+        }
+
         // --- FIREBASE CONFIGURATION ---
         const firebaseConfig = {
             apiKey: "AIzaSyDhDsti9DhXv6rhQte7DYNEiNbZA1VSFA0",
@@ -587,12 +636,10 @@
         function updateDarkIcons(isDark) {
             const suns = [document.getElementById('dark-icon-sun'), document.getElementById('mobile-dark-icon-sun')];
             const moons = [document.getElementById('dark-icon-moon'), document.getElementById('mobile-dark-icon-moon')];
-            
             suns.forEach(el => el && (isDark ? el.classList.remove('hidden') : el.classList.add('hidden')));
             moons.forEach(el => el && (isDark ? el.classList.add('hidden') : el.classList.remove('hidden')));
         }
 
-        // Initialize Dark Mode
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
             updateDarkIcons(true);
@@ -600,29 +647,26 @@
             updateDarkIcons(false);
         }
 
-        // --- DATABASE FUNCTIONS ---
+        // --- DATABASE FUNCTIONS (Enhanced with Reveals) ---
         async function fetchArticles() {
             if(!db) return;
             const container = document.getElementById('articles-container');
             const q = db.collection("articles").orderBy("date", "desc");
             try {
                 const snapshot = await q.get();
-                if(snapshot.empty) { 
-                    container.innerHTML = `<p class="col-span-3 text-center text-stone-400">No articles yet. Admin can add them!</p>`; 
-                    return; 
-                }
-                container.innerHTML = snapshot.docs.map(doc => {
+                if(snapshot.empty) { container.innerHTML = `<p class="col-span-3 text-center text-stone-400">No articles yet. Admin can add them!</p>`; return; }
+                container.innerHTML = snapshot.docs.map((doc, i) => {
                     const d = doc.data();
                     const id = doc.id;
                     const dataStr = encodeURIComponent(JSON.stringify({...d, id: id}));
                     const adminBtns = isAdminMode ? `<div class="admin-controls"><button onclick="editItem('article', '${dataStr}')" class="admin-btn edit-btn">✏️</button><button onclick="deleteItem('articles', '${id}')" class="admin-btn delete-btn">🗑️</button></div>` : '';
                     return `
-                    <div class="relative group">
+                    <div class="reveal relative group" style="transition-delay: ${i * 100}ms">
                         ${adminBtns}
                         <a href="${d.link}" target="_blank" class="article-card block bg-white dark:bg-dark-card rounded-xl overflow-hidden border border-stone-200 dark:border-dark-border transition-all duration-300">
                             <div class="h-48 overflow-hidden relative">
                                 <img src="${d.image}" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/400x200'">
-                                <div class="absolute top-4 left-4 bg-white/95 px-3 py-1 rounded-full text-xs font-bold text-indigo-600 shadow-sm">${d.category}</div>
+                                <div class="absolute top-4 left-4 bg-white/95 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-indigo-600 shadow-sm">${d.category}</div>
                             </div>
                             <div class="p-6">
                                 <div class="text-xs text-stone-400 mb-2 flex items-center gap-2"><span>${d.readTime}</span></div>
@@ -633,6 +677,7 @@
                         </a>
                     </div>`;
                 }).join('');
+                container.querySelectorAll('.reveal').forEach(el => observer.observe(el));
             } catch(e) { console.error(e); }
         }
 
@@ -641,17 +686,14 @@
             const container = document.getElementById('services-container');
             try {
                 const snapshot = await db.collection("services").get();
-                if(snapshot.empty) { 
-                    container.innerHTML = `<p class="col-span-3 text-center text-stone-400">No services yet. Admin can add them!</p>`; 
-                    return; 
-                }
-                container.innerHTML = snapshot.docs.map(doc => {
+                if(snapshot.empty) { container.innerHTML = `<p class="col-span-3 text-center text-stone-400">No services yet. Admin can add them!</p>`; return; }
+                container.innerHTML = snapshot.docs.map((doc, i) => {
                     const d = doc.data();
                     const id = doc.id;
                     const dataStr = encodeURIComponent(JSON.stringify({...d, id: id}));
                     const adminBtns = isAdminMode ? `<div class="admin-controls"><button onclick="editItem('service', '${dataStr}')" class="admin-btn edit-btn">✏️</button><button onclick="deleteItem('services', '${id}')" class="admin-btn delete-btn">🗑️</button></div>` : '';
                     return `
-                    <div class="relative group">
+                    <div class="reveal relative group" style="transition-delay: ${i * 100}ms">
                         ${adminBtns}
                         <div class="fiverr-card bg-white dark:bg-dark-card rounded-xl overflow-hidden border border-stone-200 dark:border-dark-border transition-all duration-300 flex flex-col h-full">
                             <div class="relative h-48 bg-stone-100 group">
@@ -674,6 +716,7 @@
                         </div>
                     </div>`;
                 }).join('');
+                container.querySelectorAll('.reveal').forEach(el => observer.observe(el));
             } catch(e) { console.error(e); }
         }
 
@@ -682,29 +725,28 @@
             const container = document.getElementById('timeline-container');
             const snapshot = await db.collection("journey").orderBy("date", "desc").get();
             if(snapshot.empty) {
-                container.innerHTML = `
-                    <div class="timeline-item relative pl-8"><div class="timeline-dot absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-emerald-500"></div><h3 class="text-xl font-bold dark:text-white">BSc in Agri Business</h3><p class="text-sm text-stone-500">UoR (Static)</p></div>
-                `;
+                container.innerHTML = `<div class="timeline-item relative pl-8"><div class="timeline-dot absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-emerald-500"></div><h3 class="text-xl font-bold dark:text-white">BSc in Agri Business</h3><p class="text-sm text-stone-500">UoR (Static)</p></div>`;
                 return; 
             }
-            container.innerHTML = snapshot.docs.map(doc => {
+            container.innerHTML = snapshot.docs.map((doc, i) => {
                 const d = doc.data();
                 const id = doc.id;
                 const str = encodeURIComponent(JSON.stringify({...d, id:id}));
                 const btns = isAdminMode ? `<div class="absolute top-0 right-0 flex gap-2"><button onclick="editItem('journey','${str}')" class="text-blue-500 text-xs">✏️</button><button onclick="deleteItem('journey','${id}')" class="text-red-500 text-xs">🗑️</button></div>` : '';
                 const dotColor = d.type === 'edu' ? 'bg-emerald-500' : 'bg-indigo-500';
                 return `
-                <div class="timeline-item relative pl-8 group">
+                <div class="reveal timeline-item relative pl-8 group" style="transition-delay: ${i * 100}ms">
                     <div class="timeline-dot absolute -left-[9px] top-1 w-4 h-4 rounded-full ${dotColor} border-2 border-white dark:border-stone-900 shadow-sm"></div>
                     <div class="bg-white dark:bg-dark-card p-6 rounded-xl border border-stone-200 dark:border-dark-border shadow-sm group-hover:shadow-md transition-all relative">
                         ${btns}
-                        <span class="text-xs font-bold text-stone-400 uppercase tracking-wide">${d.date}</span>
+                        <span class="text-xs font-bold text-stone-400 uppercase tracking-wide font-mono">${d.date}</span>
                         <h3 class="text-xl font-bold text-stone-900 dark:text-white mt-1">${d.title}</h3>
                         <p class="text-sm text-stone-500 dark:text-stone-400">${d.place}</p>
                         <p class="text-stone-600 dark:text-stone-300 mt-3 leading-relaxed">${d.description}</p>
                     </div>
                 </div>`;
             }).join('');
+            container.querySelectorAll('.reveal').forEach(el => observer.observe(el));
         }
 
         // --- CONTACT & MESSAGING ---
@@ -789,7 +831,10 @@
         
         function navigateTo(pageId) {
             document.querySelectorAll('.page-section').forEach(p => p.classList.add('hidden'));
-            document.getElementById('page-' + pageId).classList.remove('hidden');
+            const target = document.getElementById('page-' + pageId);
+            target.classList.remove('hidden');
+            // Retrigger animations
+            target.querySelectorAll('.reveal').forEach(el => { el.classList.remove('active'); observer.observe(el); });
             window.scrollTo(0, 0);
             document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.target === pageId));
         }
