@@ -302,6 +302,18 @@
                         <a href="http://linkedin.com/company/the-mind-spark-media" target="_blank" class="px-6 py-3 bg-stone-800 hover:bg-stone-900 text-white font-semibold rounded-lg shadow-sm transition-all transform hover:-translate-y-0.5 border border-stone-700 flex items-center gap-2">
                             <span>Mind Spark Media 🚀</span>
                         </a>
+<div class="mt-6 flex items-center gap-3 animate-pulse">
+    <div class="flex -space-x-2">
+        <img class="inline-block h-8 w-8 rounded-full ring-2 ring-white dark:ring-stone-900 object-cover" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=64&h=64" alt=""/>
+        <img class="inline-block h-8 w-8 rounded-full ring-2 ring-white dark:ring-stone-900 object-cover" src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=64&h=64" alt=""/>
+        <img class="inline-block h-8 w-8 rounded-full ring-2 ring-white dark:ring-stone-900 object-cover" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=64&h=64" alt=""/>
+    </div>
+    <div class="text-sm font-medium text-stone-600 dark:text-stone-300">
+        <span id="visit-count" class="font-bold text-emerald-600 text-lg">Loading...</span> 
+        <span class="text-xs text-stone-400 block">People visited this profile</span>
+    </div>
+</div>
+                        
                     </div>
                 </div>
                 <div class="md:col-span-5 relative reveal" style="transition-delay: 200ms;">
@@ -923,7 +935,47 @@ try {
         if(skillContainer) {
             skills.forEach(skill => { const span = document.createElement('span'); span.className = `px-3 py-1 rounded-full text-sm font-medium border ${colors[skill.type]}`; span.innerText = skill.name; skillContainer.appendChild(span); });
         }
+
+        // --- VISITOR COUNTER LOGIC ---
+        async function updateVisitorCount() {
+            if(!db) return;
+            const counterRef = db.collection('stats').doc('visitors');
+            
+            // 1. Check if user already visited in this session (Optional: to prevent reload spam)
+            const visited = sessionStorage.getItem('visited');
+            
+            if (!visited) {
+                // First time in this session: Increment count in Database
+                try {
+                    await counterRef.update({
+                        count: firebase.firestore.FieldValue.increment(1)
+                    });
+                    sessionStorage.setItem('visited', 'true');
+                } catch (error) {
+                    // If document doesn't exist yet, create it
+                    if (error.code === 'not-found') {
+                        await counterRef.set({ count: 1 });
+                    }
+                }
+            }
+
+            // 2. Real-time Listener (Update UI instantly)
+            counterRef.onSnapshot((doc) => {
+                if (doc.exists) {
+                    const count = doc.data().count;
+                    // Format number (e.g., 1,200)
+                    document.getElementById('visit-count').innerText = count.toLocaleString();
+                }
+            });
+        }
+
+        // Run this when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            // Wait a bit for Firebase to init
+            setTimeout(updateVisitorCount, 2000);
+        });
     </script>
 </body>
 </html>
+
 
