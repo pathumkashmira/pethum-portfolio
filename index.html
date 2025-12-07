@@ -94,6 +94,7 @@
                     </button>
 
                     <button onclick="navigateTo('nft-drop')" class="ml-2 px-4 py-2 bg-stone-800 text-white rounded-full hover:bg-stone-900 transition-colors shadow-sm font-semibold border border-stone-700" data-target="nft-drop">NFT Drop 🚀</button>
+                     <button onclick="navigateTo('contact')" class="ml-2 px-4 py-2 bg-stone-100 text-stone-700 hover:text-emerald-600 rounded-full font-bold transition-colors border border-stone-200" data-target="contact">Contact Me 📬</button>
                 </div>
                 
                 <!-- Mobile Menu Button -->
@@ -115,6 +116,7 @@
                     <button onclick="navigateTo('articles'); toggleMobileMenu()" class="text-left px-3 py-2 text-stone-600 hover:bg-stone-100 rounded-md">Articles</button>
                     <button onclick="navigateTo('fiverr-gigs'); toggleMobileMenu()" class="text-left px-3 py-2 text-emerald-600 font-bold hover:bg-emerald-50 rounded-md">Services</button>
                     <button onclick="navigateTo('nft-drop'); toggleMobileMenu()" class="text-left px-3 py-2 text-stone-800 font-bold hover:bg-stone-100 rounded-md">NFT Drop 🚀</button>
+                    <button onclick="navigateTo('contact'); toggleMobileMenu()" class="text-left px-3 py-2 text-stone-800 font-bold hover:bg-stone-100 rounded-md">Contact Me 📬</button>
                 </div>
             </div>
         </div>
@@ -193,6 +195,14 @@
                     <button id="jny-btn" onclick="handleJourney()" class="w-full bg-amber-600 hover:bg-amber-500 py-2 rounded font-bold text-sm transition-colors">Add Journey</button>
                 </div>
             </div>
+            <div class="mt-8 border-t border-stone-700 pt-6">
+    <h3 class="text-xl font-bold text-emerald-400 mb-4 flex items-center gap-2">
+        📬 Inbox (Direct Messages)
+    </h3>
+    <div id="admin-messages-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-60 overflow-y-auto pr-2">
+        <p class="text-stone-500 text-sm">Loading messages...</p>
+    </div>
+</div>
         </div>
 
         <!-- PAGE 1: PROFILE -->
@@ -471,6 +481,56 @@
             </section>
         </div>
 
+                <!-- PAGE 7: Contact Me -->
+
+        <div id="page-contact" class="page-section hidden">
+    <section class="max-w-3xl mx-auto pt-10">
+        <div class="bg-white rounded-2xl shadow-xl border border-stone-200 overflow-hidden flex flex-col md:flex-row">
+            
+            <div class="bg-stone-900 text-white p-8 md:w-2/5 flex flex-col justify-between">
+                <div>
+                    <h2 class="text-3xl font-bold mb-2">Let's Chat</h2>
+                    <p class="text-stone-400 text-sm mb-6">Got a project in mind or just want to say hi? Send me a direct message here.</p>
+                    
+                    <div class="space-y-4 text-sm">
+                        <div class="flex items-center gap-3">
+                            <span class="p-2 bg-stone-800 rounded-lg">📧</span>
+                            <span>pethum@example.com</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="p-2 bg-stone-800 rounded-lg">📍</span>
+                            <span>Galle, Sri Lanka</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-8">
+                    <p class="text-xs text-stone-500">Replies usually within 24h</p>
+                </div>
+            </div>
+
+            <div class="p-8 md:w-3/5 bg-stone-50">
+                <form id="contact-form" onsubmit="event.preventDefault(); sendContactMessage();" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-stone-500 uppercase mb-1">Your Name</label>
+                        <input type="text" id="contact-name" required class="w-full px-4 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-stone-500 uppercase mb-1">Your Email</label>
+                        <input type="email" id="contact-email" required class="w-full px-4 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-stone-500 uppercase mb-1">Message</label>
+                        <textarea id="contact-msg" rows="4" required class="w-full px-4 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none bg-white"></textarea>
+                    </div>
+                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-lg transition-all transform hover:-translate-y-0.5 shadow-lg">
+                        Send Message 🚀
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+</div>
+
     </main>
 
     <!-- Footer -->
@@ -483,6 +543,51 @@
         <p class="text-xs text-stone-400 mt-8">
             © 2025 Pethum Kashmira. Generated based on public LinkedIn & ResearchGate data.
         </p>
+
+        <div class="fixed bottom-6 right-6 z-[60] flex flex-col items-end">
+    
+    <div id="chat-popup" class="hidden mb-4 w-80 bg-white rounded-2xl shadow-2xl border border-stone-200 overflow-hidden transform transition-all origin-bottom-right">
+        <div class="bg-stone-900 p-4 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <div class="relative">
+                    <img src="https://media.licdn.com/dms/image/v2/D4E03AQFdRsgOourY5A/profile-displayphoto-scale_200_200/B4EZqEAUJCJ0Ac-/0/1763151268578?e=1766620800&v=beta&t=YOS3Rs0HxNnuPx3hTa2zkHuHYl7Cf6iLS6WxFU-JD7s" class="w-8 h-8 rounded-full border border-stone-600">
+                    <span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 border-2 border-stone-900 rounded-full"></span>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold text-sm">Pethum Kashmira</h4>
+                    <p class="text-[10px] text-stone-400">Ask me anything!</p>
+                </div>
+            </div>
+            <button onclick="toggleChat()" class="text-stone-400 hover:text-white transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+            </button>
+        </div>
+
+        <div class="p-4 bg-stone-50">
+            <form id="bubble-form" onsubmit="event.preventDefault(); sendBubbleMessage();" class="space-y-3">
+                <input type="text" id="bub-name" placeholder="Your Name" required class="w-full px-3 py-2 text-sm border border-stone-300 rounded-lg focus:ring-1 focus:ring-emerald-500 outline-none">
+                <input type="email" id="bub-email" placeholder="Your Email" required class="w-full px-3 py-2 text-sm border border-stone-300 rounded-lg focus:ring-1 focus:ring-emerald-500 outline-none">
+                <textarea id="bub-msg" rows="3" placeholder="How can I help you?" required class="w-full px-3 py-2 text-sm border border-stone-300 rounded-lg focus:ring-1 focus:ring-emerald-500 outline-none"></textarea>
+                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-lg text-sm transition-colors shadow-md">
+                    Send Message ✈️
+                </button>
+            </form>
+        </div>
+        <div class="bg-stone-100 p-2 text-center border-t border-stone-200">
+            <p class="text-[10px] text-stone-400">Powered by Pethum's Code</p>
+        </div>
+    </div>
+
+    <button onclick="toggleChat()" class="group bg-stone-900 hover:bg-emerald-600 text-white p-4 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 flex items-center justify-center relative">
+        <span class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full animate-pulse"></span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+        </svg>
+    </button>
+</div>
+
     </footer>
 
     <!-- LOGIC SCRIPTS -->
@@ -659,6 +764,125 @@
             }).join('');
         }
 
+// --- BUBBLE CHAT LOGIC ---
+
+function toggleChat() {
+    const popup = document.getElementById('chat-popup');
+    popup.classList.toggle('hidden');
+}
+
+async function sendBubbleMessage() {
+    const name = document.getElementById('bub-name').value;
+    const email = document.getElementById('bub-email').value;
+    const msg = document.getElementById('bub-msg').value;
+    const btn = document.querySelector('#bubble-form button');
+
+    if(!name || !email || !msg) return;
+
+    btn.innerText = "Sending...";
+    btn.disabled = true;
+
+    try {
+        // Saving to the same 'messages' collection so it appears in your Admin Dashboard
+        await db.collection("messages").add({
+            name: name + " (via Bubble)", // Added tag so you know where it came from
+            email: email,
+            message: msg,
+            date: new Date().toISOString(),
+            read: false
+        });
+        
+        // Success Animation inside bubble
+        document.getElementById('bubble-form').innerHTML = `
+            <div class="text-center py-8">
+                <div class="text-4xl mb-2">✅</div>
+                <h4 class="font-bold text-stone-800">Sent!</h4>
+                <p class="text-xs text-stone-500">I'll reply to ${email} soon.</p>
+                <button onclick="toggleChat()" class="mt-4 text-emerald-600 text-xs font-bold hover:underline">Close</button>
+            </div>
+        `;
+        
+    } catch(e) {
+        alert("Error: " + e.message);
+        btn.innerText = "Send Message ✈️";
+        btn.disabled = false;
+    }
+}
+
+// --- CONTACT & MESSAGING LOGIC ---
+
+// 1. Send Message (For Visitors)
+async function sendContactMessage() {
+    const name = document.getElementById('contact-name').value;
+    const email = document.getElementById('contact-email').value;
+    const msg = document.getElementById('contact-msg').value;
+    const btn = document.querySelector('#contact-form button');
+
+    if(!name || !email || !msg) return alert("Please fill all fields!");
+
+    btn.innerText = "Sending...";
+    btn.disabled = true;
+
+    try {
+        await db.collection("messages").add({
+            name: name,
+            email: email,
+            message: msg,
+            date: new Date().toISOString(),
+            read: false
+        });
+        alert("Message Sent! I'll get back to you soon.");
+        document.getElementById('contact-form').reset();
+    } catch(e) {
+        alert("Error: " + e.message);
+    } finally {
+        btn.innerText = "Send Message 🚀";
+        btn.disabled = false;
+    }
+}
+
+// 2. Fetch Messages (For Admin Only)
+async function fetchMessages() {
+    if(!isAdminMode || !db) return;
+    const container = document.getElementById('admin-messages-container');
+    
+    try {
+        const snapshot = await db.collection("messages").orderBy("date", "desc").get();
+        
+        if(snapshot.empty) {
+            container.innerHTML = '<p class="text-stone-500 text-sm italic">No messages yet.</p>';
+            return;
+        }
+
+        container.innerHTML = snapshot.docs.map(doc => {
+            const d = doc.data();
+            // Format Date
+            const dateObj = new Date(d.date);
+            const dateStr = dateObj.toLocaleDateString() + ' ' + dateObj.toLocaleTimeString();
+
+            return `
+            <div class="bg-stone-800 p-3 rounded-lg border border-stone-600 flex flex-col gap-2">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h4 class="font-bold text-emerald-400 text-sm">${d.name}</h4>
+                        <p class="text-xs text-stone-400">${d.email}</p>
+                    </div>
+                    <span class="text-[10px] text-stone-500">${dateStr}</span>
+                </div>
+                <p class="text-xs text-stone-300 bg-stone-900/50 p-2 rounded border border-stone-700">${d.message}</p>
+                <div class="flex gap-2 mt-1">
+                    <a href="mailto:${d.email}?subject=Reply from Pethum&body=Hi ${d.name},%0D%0A%0D%0AThanks for your message: '${d.message}'" 
+                       class="flex-1 text-center bg-emerald-600 hover:bg-emerald-500 text-white text-xs py-1.5 rounded font-bold">
+                       ↩ Reply
+                    </a>
+                    <button onclick="deleteItem('messages', '${doc.id}')" class="px-3 bg-red-600 hover:bg-red-500 text-white text-xs rounded font-bold">🗑️</button>
+                </div>
+            </div>`;
+        }).join('');
+
+    } catch(e) { console.error("Msg Error:", e); }
+}
+
         // --- BUTTON HANDLERS ---
         window.handleArticle = async function() {
             const id = document.getElementById('art-id').value;
@@ -757,12 +981,13 @@
             }
         }
 
-        window.setAdminMode = function(status) {
-            isAdminMode = status;
-            fetchArticles();
-            fetchServices();
-            fetchJourney();
-        }
+       window.setAdminMode = function(status) {
+    isAdminMode = status;
+    fetchArticles();
+    fetchServices();
+    fetchJourney();
+    if(status) fetchMessages(); // <--- MEKA ADD KARANNA
+}
 
         // --- NAVIGATION ---
         function navigateTo(pageId) {
