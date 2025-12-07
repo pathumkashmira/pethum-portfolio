@@ -207,17 +207,22 @@
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 py-10 flex-grow w-full">
 
-        <div id="admin-login-modal" class="fixed inset-0 admin-modal hidden z-[100] flex items-center justify-center">
-            <div class="glass-panel bg-white dark:bg-stone-800 rounded-xl p-8 max-w-sm w-full shadow-2xl">
-                <h3 class="text-2xl font-bold mb-2 text-stone-900 dark:text-white">Admin Access 🔒</h3>
-                <p class="text-xs text-stone-500 dark:text-stone-400 mb-4">Database: <span id="db-status-text" class="text-amber-500 font-bold">Connecting...</span></p>
-                <input type="password" id="admin-pass" placeholder="Enter Password" class="w-full px-4 py-2 border dark:border-stone-600 dark:bg-stone-700 dark:text-white rounded-lg mb-4 focus:ring-2 focus:ring-emerald-500 outline-none">
-                <div class="flex gap-2">
-                    <button onclick="checkAdmin()" class="flex-1 bg-stone-900 text-white py-2 rounded-lg hover:bg-stone-700">Login</button>
-                    <button onclick="closeAdminModal()" class="flex-1 bg-stone-200 text-stone-700 py-2 rounded-lg hover:bg-stone-300">Cancel</button>
-                </div>
-            </div>
+        <div id="admin-login-modal" class="fixed inset-0 admin-modal hidden z-[100] flex items-center justify-center backdrop-blur-sm">
+    <div class="glass-panel rounded-2xl p-8 max-w-sm w-full shadow-2xl transform transition-all scale-100">
+        <h3 class="text-2xl font-bold mb-2 text-stone-900 dark:text-white">Admin Access 🔒</h3>
+        <p class="text-xs text-stone-500 mb-4">Secured by Firebase Auth</p>
+        
+        <input type="email" id="admin-email" placeholder="Admin Email" class="w-full px-4 py-2 border dark:border-stone-600 dark:bg-stone-700/50 dark:text-white rounded-lg mb-2 focus:ring-2 focus:ring-emerald-500 outline-none">
+        
+        <input type="password" id="admin-pass" placeholder="Password" class="w-full px-4 py-2 border dark:border-stone-600 dark:bg-stone-700/50 dark:text-white rounded-lg mb-4 focus:ring-2 focus:ring-emerald-500 outline-none">
+        
+        <div class="flex gap-2">
+            <button onclick="loginAdmin()" class="flex-1 bg-stone-900 text-white py-2 rounded-lg hover:bg-stone-700">Login</button>
+            <button onclick="closeAdminModal()" class="flex-1 bg-stone-200 text-stone-700 py-2 rounded-lg hover:bg-stone-300">Cancel</button>
         </div>
+        <p id="login-error" class="text-red-500 text-xs mt-2 text-center hidden"></p>
+    </div>
+</div>
 
         <div id="admin-dashboard" class="hidden mb-10 bg-stone-900/95 backdrop-blur-md text-white p-6 rounded-2xl shadow-xl border border-stone-700 sticky top-20 z-40 max-h-[80vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-6">
@@ -601,29 +606,32 @@
         // --- GLOBAL VARS ---
         let db, auth, user, isAdminMode = false;
 
-        // --- INIT FIREBASE ---
-        try {
-            firebase.initializeApp(firebaseConfig);
-            db = firebase.firestore();
-            auth = firebase.auth();
-            auth.signInAnonymously().catch(e => console.error("Auth Err:", e));
-            auth.onAuthStateChanged(u => {
-                if (u) {
-                    user = u;
-                    const statusText = document.getElementById('db-status-text');
-                    if(statusText) {
-                        statusText.innerText = "✅ Connected";
-                        statusText.classList.replace('text-amber-500', 'text-emerald-500');
-                    }
-                    fetchArticles();
-                    fetchServices();
-                    fetchJourney();
-                    if(isAdminMode) fetchMessages();
-                }
-            });
-        } catch (e) {
-            console.error("Firebase Init Error:", e);
+        // --- INIT FIREBASE (මේ කොටස කලින් තියන එක වෙනුවට දාන්න) ---
+try {
+    firebase.initializeApp(firebaseConfig);
+    db = firebase.firestore();
+    auth = firebase.auth();
+    
+    // Auth State Listener (මේකෙන් තමයි Admin ද නැද්ද බලන්නේ)
+    auth.onAuthStateChanged(user => {
+        if (user && !user.isAnonymous) {
+            // ඇඩ්මින් ලොග් වෙලා නම් Dashboard එක පෙන්නන්න
+            console.log("Admin Logged In:", user.email);
+            document.getElementById('admin-dashboard').classList.remove('hidden');
+            document.getElementById('db-status-text').innerText = "✅ Admin Connected";
+            window.setAdminMode(true);
+        } else {
+            // ඇඩ්මින් නැත්නම් Dashboard එක හංගන්න
+            console.log("Guest User");
+            document.getElementById('admin-dashboard').classList.add('hidden');
+            window.setAdminMode(false);
+            // Guest කෙනෙක්ට Database eka read karanna anonymous login ekak demu
+            if (!user) auth.signInAnonymously().catch(e => console.error(e));
         }
+    });
+} catch (e) {
+    console.error("Firebase Init Error:", e);
+}
 
         // --- DARK MODE LOGIC ---
         function toggleDarkMode() {
@@ -839,13 +847,73 @@
             document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.target === pageId));
         }
         function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('hidden'); }
+      
+        // --- NEW SECURE LOGIN FUNCTIONS ---
+        // Secret Logo Click (5 times click to open modal)
         let clicks = 0;
-        document.getElementById('secret-logo').addEventListener('click', () => { clicks++; if(clicks === 5) { document.getElementById('admin-login-modal').classList.remove('hidden'); clicks = 0; } });
-        function closeAdminModal() { document.getElementById('admin-login-modal').classList.add('hidden'); }
-        function logoutAdmin() { document.getElementById('admin-dashboard').classList.add('hidden'); window.setAdminMode(false); resetForms(); }
-        function checkAdmin() { if(document.getElementById('admin-pass').value === "pethum123") { document.getElementById('admin-login-modal').classList.add('hidden'); document.getElementById('admin-dashboard').classList.remove('hidden'); window.setAdminMode(true); } else { alert("Wrong password!"); } }
-        function resetForms() { document.querySelectorAll('input, textarea').forEach(i => i.value = ''); document.getElementById('art-id').value = ''; document.getElementById('gig-id').value = ''; document.getElementById('jny-id').value = ''; document.getElementById('art-btn').innerText = "Add Article"; document.getElementById('gig-btn').innerText = "Add Service"; document.getElementById('jny-btn').innerText = "Add Journey"; }
+        const logo = document.getElementById('secret-logo');
+        if(logo) {
+            logo.addEventListener('click', () => { 
+                clicks++; 
+                if(clicks === 5) { 
+                    document.getElementById('admin-login-modal').classList.remove('hidden'); 
+                    clicks = 0; 
+                } 
+            });
+        }
 
+        async function loginAdmin() {
+            const email = document.getElementById('admin-email').value;
+            const pass = document.getElementById('admin-pass').value;
+            const errorText = document.getElementById('login-error');
+            const btn = document.querySelector('button[onclick="loginAdmin()"]');
+
+            if(!email || !pass) {
+                errorText.innerText = "Please fill all fields";
+                errorText.classList.remove('hidden');
+                return;
+            }
+
+            btn.innerText = "Checking...";
+            errorText.classList.add('hidden');
+
+            try {
+                // Firebase Server එකෙන් Check කරනවා
+                await auth.signInWithEmailAndPassword(email, pass);
+                
+                // හරි නම් Modal එක වැහෙනවා
+                closeAdminModal();
+                alert("Welcome back, Pethum! 🚀");
+                
+            } catch (error) {
+                console.error(error);
+                errorText.innerText = "Login Failed: " + error.message;
+                errorText.classList.remove('hidden');
+            } finally {
+                btn.innerText = "Login";
+            }
+        }
+
+        async function logoutAdmin() {
+            if(confirm("Are you sure you want to logout?")) {
+                try {
+                    await auth.signOut();
+                    alert("Logged out successfully 👋");
+                    auth.signInAnonymously(); // Guest mode activation
+                } catch (e) {
+                    alert("Error logging out");
+                }
+            }
+        }
+
+        function closeAdminModal() { 
+            document.getElementById('admin-login-modal').classList.add('hidden'); 
+            const err = document.getElementById('login-error');
+            if(err) err.classList.add('hidden');
+            if(document.getElementById('admin-email')) document.getElementById('admin-email').value = '';
+            if(document.getElementById('admin-pass')) document.getElementById('admin-pass').value = '';
+        }
+        
         document.addEventListener('DOMContentLoaded', () => navigateTo('profile'));
 
         // SKILLS
@@ -858,3 +926,4 @@
     </script>
 </body>
 </html>
+
