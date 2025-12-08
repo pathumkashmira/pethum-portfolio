@@ -1024,53 +1024,83 @@ try {
     <source src="music.mp3" type="audio/mpeg">
 </audio>
 
-<button id="music-btn" onclick="toggleMusic()" class="fixed bottom-6 left-6 z-50 p-3 rounded-full bg-stone-900/80 dark:bg-stone-100/80 backdrop-blur-md border border-stone-700 dark:border-stone-300 shadow-2xl transition-all duration-300 hover:scale-110 group">
-    <svg id="icon-off" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white dark:text-stone-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+<button id="music-btn" onclick="toggleMusic()" class="hidden fixed bottom-6 left-6 z-50 p-3 rounded-full bg-stone-900/80 dark:bg-stone-100/80 backdrop-blur-md border border-stone-700 dark:border-stone-300 shadow-2xl transition-all duration-300 hover:scale-110 group animate-float-slow">
+    
+    <div id="icon-playing" class="hidden relative flex items-center justify-center w-6 h-6">
+        <span class="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75 animate-ping"></span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="relative h-6 w-6 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+        </svg>
+    </div>
+
+    <svg id="icon-muted" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white dark:text-stone-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" clip-rule="evenodd" />
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
-    </svg>
-    
-    <svg id="icon-on" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-emerald-500 hidden animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
     </svg>
 </button>
 
 <script>
     const music = document.getElementById('bg-music');
     const musicBtn = document.getElementById('music-btn');
-    const iconOff = document.getElementById('icon-off');
-    const iconOn = document.getElementById('icon-on');
+    const iconPlaying = document.getElementById('icon-playing');
+    const iconMuted = document.getElementById('icon-muted');
     let isPlaying = false;
 
-    // Set volume to 30% (so it's calm and not loud)
-    music.volume = 0.3;
+    // Volume Adjustment (0.1 to 1.0)
+    music.volume = 0.4; 
 
+    // Function to handle Play/Pause
     function toggleMusic() {
         if (isPlaying) {
             music.pause();
-            iconOn.classList.add('hidden');
-            iconOff.classList.remove('hidden');
+            iconPlaying.classList.add('hidden');
+            iconMuted.classList.remove('hidden');
             musicBtn.classList.remove('ring-2', 'ring-emerald-500');
         } else {
-            music.play().then(() => {
-                iconOff.classList.add('hidden');
-                iconOn.classList.remove('hidden');
-                musicBtn.classList.add('ring-2', 'ring-emerald-500');
-            }).catch(error => {
-                console.log("Audio play failed (browser blocked):", error);
-                alert("Please interact with the page first to play music!");
-            });
+            music.play();
+            iconMuted.classList.add('hidden');
+            iconPlaying.classList.remove('hidden');
+            musicBtn.classList.add('ring-2', 'ring-emerald-500');
         }
         isPlaying = !isPlaying;
     }
-    
-    // Optional: Try to auto-play if user clicks ANYWHERE on the site
-    document.body.addEventListener('click', function() {
-        if(!isPlaying && music.paused) {
-            // Uncomment below line if you want it to start automatically after first click
-            // toggleMusic(); 
-        }
-    }, { once: true });
+
+    // --- THE TRICK: Play on First Interaction ---
+    function tryAutoPlay() {
+        // First, show the button
+        musicBtn.classList.remove('hidden');
+        
+        // Try to play automatically
+        music.play().then(() => {
+            // If browser allowed it (Rare), update icons
+            isPlaying = true;
+            iconMuted.classList.add('hidden');
+            iconPlaying.classList.remove('hidden');
+            musicBtn.classList.add('ring-2', 'ring-emerald-500');
+        }).catch(error => {
+            // If browser BLOCKED it (Expected), wait for first click
+            console.log("Autoplay waiting for interaction...");
+            
+            const startAudio = () => {
+                music.play();
+                isPlaying = true;
+                iconMuted.classList.add('hidden');
+                iconPlaying.classList.remove('hidden');
+                musicBtn.classList.add('ring-2', 'ring-emerald-500');
+                
+                // Remove listener so it doesn't trigger again
+                document.removeEventListener('click', startAudio);
+                document.removeEventListener('scroll', startAudio);
+            };
+
+            // Listen for ANY click or Scroll to start music
+            document.addEventListener('click', startAudio, { once: true });
+            document.addEventListener('scroll', startAudio, { once: true });
+        });
+    }
+
+    // Start the process when page loads
+    window.addEventListener('load', tryAutoPlay);
 </script>
     
 </body>
