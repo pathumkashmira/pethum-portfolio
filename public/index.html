@@ -66,6 +66,11 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
 
     <style>
         body { font-family: 'Inter', sans-serif; overflow-x: hidden; }
@@ -654,8 +659,14 @@
         // --- INIT FIREBASE (මේ කොටස කලින් තියන එක වෙනුවට දාන්න) ---
 try {
     firebase.initializeApp(firebaseConfig);
+    
+    // 🔥 මේ Analytics සේවාව ආරම්භ කිරීමේ කේතය එකතු කරන්න (ADD THIS ANALYTICS INIT CODE)
+    analytics = firebase.analytics(); // මෙය ගෝලීයව ප්‍රකාශ කරන්න (Declare this globally, like db and auth)
+    
     db = firebase.firestore();
     auth = firebase.auth();
+    
+    // ... අනෙකුත් කේත
     
     // Auth State Listener (මේකෙන් තමයි Admin ද නැද්ද බලන්නේ)
     auth.onAuthStateChanged(user => {
