@@ -1,17 +1,13 @@
 {
   "hosting": {
-    "public": "dist",
-    // ... අනෙකුත් settings (rewrites, headers, etc.)
-    
-    // 🔥 මේ redirects rule එක එකතු කරන්න (ADD THIS REDIRECTS RULE)
+    // ...
     "redirects": [
       {
         "source": "/index.html",
         "destination": "/",
         "type": 301
       }
-    ],
-
+    ]
     // ...
   }
 }
