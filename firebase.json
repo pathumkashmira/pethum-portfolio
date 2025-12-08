@@ -1,16 +1,17 @@
 {
   "hosting": {
-    "public": "public",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "rewrites": [
+    "public": "dist",
+    // ... අනෙකුත් settings (rewrites, headers, etc.)
+    
+    // 🔥 මේ redirects rule එක එකතු කරන්න (ADD THIS REDIRECTS RULE)
+    "redirects": [
       {
-        "source": "**",
-        "destination": "/index.html"
+        "source": "/index.html",
+        "destination": "/",
+        "type": 301
       }
-    ]
+    ],
+
+    // ...
   }
 }
